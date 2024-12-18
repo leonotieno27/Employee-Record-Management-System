@@ -23,14 +23,17 @@ void addNewEmployee();
 void viewEmployees();
 void updateDetails();
 void deleteDetails();
+void backtoMenu();
+void checkPassword();
 
 // File pointers
 FILE *fptr;
 FILE *tempFile;
+FILE *ps;
 
 // Main function
 int main() {
-    welcomeScreen();
+    checkPassword();
     return 0;
 }
 
@@ -58,6 +61,23 @@ void welcomeScreen() {
         case 4: deleteDetails(); break;
         case 5: exit(0);
         default: puts("Invalid choice. Try again."); welcomeScreen();
+    }
+}
+
+//back to menu function
+void backtoMenu(){
+    int choice;
+
+    puts("\n 1.Back to Main Menu.");
+    puts("2.Exit");
+    scanf(" %d", &choice);
+    if(choice == 1){
+        system("clear");
+        welcomeScreen();
+    }else if(choice == 2){
+        exit(1);
+    }else{
+        exit(1);
     }
 }
 
@@ -94,18 +114,7 @@ void addNewEmployee() {
     } while (toupper(choice) == 'Y');
 
     fclose(fptr);
-
-    puts("\n 1.Back to Main Menu.");
-    puts("2.Exit");
-    scanf(" %d", &choice);
-    if(choice == 1){
-        system("clear");
-        welcomeScreen();
-    }else if(choice == 2){
-        exit(1);
-    }else{
-        exit(1);
-    }
+    void backtoMenu();
 }
 
 // View employees
@@ -125,18 +134,7 @@ void viewEmployees() {
     }
 
     fclose(fptr);
-
-   puts("\n1.Back to Main Menu.");
-    puts("2.Exit");
-    scanf(" %d", &choice);
-    if(choice == 1){
-        system("clear");
-        welcomeScreen();
-    }else if(choice == 2){
-        exit(1);
-    }else{
-        exit(1);
-    }
+    void backtoMenu();
 }
 
 // Update employee details
@@ -183,18 +181,7 @@ void updateDetails() {
         puts("Employee not found.");
     }
 
-
-    puts("\n1.Back to Main Menu.");
-    puts("2.Exit");
-    scanf(" %d", &choice);
-    if(choice == 1){
-        system("clear");
-        welcomeScreen();
-    }else if(choice == 2){
-        exit(1);
-    }else{
-        exit(1);
-    }
+    void backtoMenu();
 }
 
 // Delete employee
@@ -234,16 +221,82 @@ void deleteDetails() {
         puts("Employee not found.");
     }
 
+    void backtoMenu();
+}
 
-    puts("\n1.Back to Main Menu.");
-    puts("2.Exit");
-    scanf(" %d", &choice);
-    if(choice == 1){
-        system("clear");
-        welcomeScreen();
-    }else if(choice == 2){
-        exit(1);
-    }else{
-        exit(1);
+//checkpassword
+void checkPassword() {
+    char pPassword[20];
+    char pConfirmPassword[20];
+    int flag = 0;
+
+    puts("\t\t*********************************");
+    puts("\t\tEMPLOYEE RECORD MANAGEMENT SYSTEM");
+    puts("\t\t*********************************\n");
+    puts("\nTo Login:");
+
+    ps = fopen("ps.txt", "rb");
+    if (ps == NULL) {
+        ps = fopen("ps.txt", "ab");
+        if (ps == NULL) {
+            puts("Error opening file for writing password.");
+            return;
+        }
+
+        puts("Enter new password: ");
+        fgets(pPassword, sizeof(pPassword), stdin);
+        pPassword[strcspn(pPassword, "\n")] = '\0';
+
+        puts("Confirm Password: ");
+        fgets(pConfirmPassword, sizeof(pConfirmPassword), stdin); //get password from input
+        pConfirmPassword[strcspn(pConfirmPassword, "\n")] = '\0'; //delete newline char or enter
+
+        int passLength = strlen(pPassword);
+        int confirmLength = strlen(pConfirmPassword);
+
+        if (passLength != confirmLength) {
+            puts("Passwords don't match in length.");
+            checkPassword();
+            return;
+        }
+
+        for (int i = 0; i < passLength; i++) {
+            if (pPassword[i] != pConfirmPassword[i]) {
+                flag = 1;
+                break;
+            }
+        }
+
+        if (flag == 0) {
+            fprintf(ps, "%s", pPassword); // Save the password to the file
+            puts("Password set successfully.");
+            fclose(ps);
+            system("clear");
+            welcomeScreen();
+        } else {
+            puts("Passwords do not match!");
+            fclose(ps);
+            checkPassword();
+        }
+
+    } else {
+        char storedPassword[20];
+        puts("Enter password: ");
+        fgets(pPassword, sizeof(pPassword), stdin);
+        pPassword[strcspn(pPassword, "\n")] = '\0';
+
+        fgets(storedPassword, sizeof(storedPassword), ps);
+        storedPassword[strcspn(storedPassword, "\n")] = '\0';
+
+        if (strcmp(pPassword, storedPassword) == 0) {
+            system("clear");
+            welcomeScreen();
+        } else {
+            puts("Incorrect password.");
+        }
+
+        fclose(ps);
     }
 }
+
+
