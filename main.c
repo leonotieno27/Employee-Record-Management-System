@@ -1,4 +1,4 @@
-//Employee Record Mnagemnt System
+//Employee Record Managemnt System
 //main.c
 //written by leonotieno27
 //Gmail: leonowino99@gmail.com
@@ -25,6 +25,7 @@ void updateDetails();
 void deleteDetails();
 void backtoMenu();
 void checkPassword();
+void sortbyId();
 
 // File pointers
 FILE *fptr;
@@ -119,7 +120,7 @@ void addNewEmployee() {
 
 // View employees
 void viewEmployees() {
-    int choice;
+    int sort;
     struct employeeinfo employee;
 
     fptr = fopen("database.txt", "rb");
@@ -127,10 +128,19 @@ void viewEmployees() {
         perror("Error opening file");
         return;
     }
-
-    puts("\nEmployee Records:");
+    system("clear");
+    puts("\nEmployee Records: ");
     while (fread(&employee, sizeof(struct employeeinfo), 1, fptr)) {
         printf("ID: %d, Name: %s, Job: %s, Salary: %.2f\n", employee.id, employee.name, employee.job, employee.salary);
+    }
+
+    puts("Press 1 to sort the list.");
+    scanf("%d", &sort);
+    if(sort == 1){
+        sortbyId();
+    }
+    else{
+        viewEmployees();
     }
 
     fclose(fptr);
@@ -139,7 +149,6 @@ void viewEmployees() {
 
 // Update employee details
 void updateDetails() {
-    int choice;
     struct employeeinfo employee;
     int updateId, found = 0;
 
@@ -186,7 +195,6 @@ void updateDetails() {
 
 // Delete employee
 void deleteDetails() {
-    int choice;
     struct employeeinfo employee;
     int deleteId, found = 0;
 
@@ -299,4 +307,53 @@ void checkPassword() {
     }
 }
 
+//sort list by bubblesort algorithm
+void sortbyId(){
+    int choice, outer, inner, didSwap, employeeCount = 0;
+    struct employeeinfo employees[100];
+
+    fptr = fopen("database.txt", "rb");
+    if(fptr == NULL){
+        perror("Error opening file");
+        return;
+    }
+
+    //read array of employees
+    while(fread(&employees[employeeCount], sizeof(struct employeeinfo), 1, fptr)){
+        employeeCount++; //count number of employees
+    }
+    fclose(fptr);
+        for(outer = 0; outer < employeeCount - 1; outer++){
+            didSwap = 0;
+            for(inner = outer + 1; inner < employeeCount; inner++){
+                if(employees[inner].id < employees[outer].id){
+                    struct employeeinfo temp = employees[inner];
+                    employees[inner] = employees[outer];
+                    employees[outer] = temp;
+                    didSwap = 1;
+                }
+            }
+            if(didSwap == 0){
+                break;
+            }
+        }
+        system("clear");
+        puts("\nSorted Employee Records");
+        for(int i; i < employeeCount; i++){
+             printf("ID: %d, Name: %s, Job: %s, Salary: %.2f\n", employees[i].id, employees[i].name,
+              employees[i].job, employees[i].salary);
+        }
+
+        puts("Press (1) to go back and press(2) to go to Main Menu");
+        scanf("%d", &choice);
+
+        if(choice == 1){
+            system("clear");
+            viewEmployees();
+        }else if(choice == 2){
+            system("clear");
+            welcomeScreen();
+        }
+
+    }
 

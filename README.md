@@ -11,6 +11,4 @@ IDE: Code Blocks.|
 compiler: GCC|
 DATE: 18-December-2024|
 
- I tried as much as i can to use file and not binary files, because fprintf, fgets looked easier to use. Till i reached at updating and deleting the data.|
-
-
+If on windows replace <system("clear")> with <system("cls")>
