@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1734519485 source:/home/leon/Documents/projects/ERMS/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"structures.h"
+
+1734516117 /home/leon/Documents/projects/ERMS/structures.h
+
