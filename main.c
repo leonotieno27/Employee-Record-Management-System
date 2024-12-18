@@ -130,7 +130,7 @@ void viewEmployees() {
     }
     system("clear");
     puts("\nEmployee Records: ");
-    while (fread(&employee, sizeof(struct employeeinfo), 1, fptr)) {
+    while (fread(&employee, sizeof(struct employeeinfo), 1, fptr)) { //store each record 1 at a time at employee then use it.
         printf("ID: %d, Name: %s, Job: %s, Salary: %.2f\n", employee.id, employee.name, employee.job, employee.salary);
     }
 
@@ -162,7 +162,7 @@ void updateDetails() {
     printf("\nEnter ID of the employee to update: ");
     scanf("%d", &updateId);
 
-    while (fread(&employee, sizeof(struct employeeinfo), 1, fptr)) {
+    while (fread(&employee, sizeof(struct employeeinfo), 1, fptr)) { //if id match, replace structure with new
         if (employee.id == updateId) {
             found = 1;
             printf("Enter New Employee Name: ");
@@ -208,8 +208,8 @@ void deleteDetails() {
     printf("\nEnter ID of the employee to delete: ");
     scanf("%d", &deleteId);
 
-    while (fread(&employee, sizeof(struct employeeinfo), 1, fptr)) {
-        if (employee.id == deleteId) {
+    while (fread(&employee, sizeof(struct employeeinfo), 1, fptr)) { //can't manipulate directly in c replace with new file
+        if (employee.id == deleteId) {                                //skipping the deleted record and rename file
             found = 1;
             printf("Deleting employee ID: %d\n", deleteId);
             continue;  // Skip this record
@@ -262,13 +262,13 @@ void checkPassword() {
         int passLength = strlen(pPassword);
         int confirmLength = strlen(pConfirmPassword);
 
-        if (passLength != confirmLength) {
+        if (passLength != confirmLength) {                    //checking length first of two passwords
             puts("Passwords don't match in length.");
             checkPassword();
             return;
         }
 
-        for (int i = 0; i < passLength; i++) {
+        for (int i = 0; i < passLength; i++) {            //checking character by character if they are similar
             if (pPassword[i] != pConfirmPassword[i]) {
                 flag = 1;
                 break;
@@ -290,13 +290,13 @@ void checkPassword() {
     } else {
         char storedPassword[20];
         puts("Enter password: ");
-        fgets(pPassword, sizeof(pPassword), stdin);
+        fgets(pPassword, sizeof(pPassword), stdin);  //stdin = take input and store in npassword
         pPassword[strcspn(pPassword, "\n")] = '\0';
 
         fgets(storedPassword, sizeof(storedPassword), ps);
         storedPassword[strcspn(storedPassword, "\n")] = '\0';
 
-        if (strcmp(pPassword, storedPassword) == 0) {
+        if (strcmp(pPassword, storedPassword) == 0) {  //lexicographically compares letter by letter
             system("clear");
             welcomeScreen();
         } else {
